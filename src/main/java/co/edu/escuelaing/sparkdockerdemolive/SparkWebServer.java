@@ -1,5 +1,8 @@
 package co.edu.escuelaing.sparkdockerdemolive;
 
+import spark.Request;
+import spark.Response;
+
 import static spark.Spark.*;
 
 public class SparkWebServer {
@@ -7,11 +10,50 @@ public class SparkWebServer {
     public static void main(String... args){
         port(getPort());
         get("hello", (req,res) -> "Hello Docker!");
-        get("sin", (req,res) -> sin("45"));
-        get("cos", (req,res) -> cos("45"));
-        get("palindromo", (req,res) -> palindromo("amolapaloma"));
-        get("magnitud", (req,res) -> magnitud("2", "3"));
+        get("/sin", (req,res) -> {
+            String string = req.queryString();
+            return buildGET(req, string);
+        });
+        get("/cos", (req,res) -> {
+            String string = req.queryString();
+            return buildGET(req, string);
+        });
+        get("/pal", (req,res) -> {
+            String string = req.queryString();
+            return buildGET(req, string);
+        });
+        get("/mag", (req,res) -> {
+            String string = req.queryString();
+            return buildGET(req, string);
+        });
 
+    }
+
+    private static String buildGET(Request req, String string){
+
+        String fuction = req.pathInfo();
+        string.replace("=","");
+
+        if(string.isEmpty()){return "Not Valid Command";}
+
+
+        //System.out.println("EL REQ ES: " + req);
+        //System.out.println("EL FUCTION ES: " + fuction);
+        //System.out.println("EL VAR: " + string);
+
+        switch (fuction){
+            case "/sin":
+                return (string);
+            case "/cos":
+                return cos(string);
+            case "/pal":
+                return pal(string);
+            case "/mag":
+                String[] temp = string.split(" ");
+                return mag(temp[0], temp[1]);
+        }
+
+        return "Not Valid Command";
     }
 
     private static int getPort() {
@@ -22,14 +64,22 @@ public class SparkWebServer {
     }
 
     private static String sin(String s){
-        return String.valueOf(Math.sin(Double.parseDouble(s)));
+        try {
+            return String.valueOf(Math.sin(Double.parseDouble(s)));
+        }catch (NumberFormatException e){
+            return "Invalid Number";
+        }
     }
 
     private static String cos(String s){
-        return String.valueOf(Math.cos(Double.parseDouble(s)));
+        try{
+            return String.valueOf(Math.cos(Double.parseDouble(s)));
+        }catch (NumberFormatException e){
+            return "Invalid Number";
+        }
     }
 
-    private static String palindromo(String string){
+    private static String pal(String string){
         String c = "";
         for(int i=(string.length()-1);i>=0;--i){
             c += string.charAt(i);
@@ -37,10 +87,14 @@ public class SparkWebServer {
         return String.valueOf(string.equals(c));
     }
 
-    private static String magnitud(String s1, String s2){
-        Double a = Double.parseDouble(s1);
-        Double b = Double.parseDouble(s2);
-        return String.valueOf(Math.sqrt(Math.pow(b,2) + Math.pow(a,2)));
+    private static String mag(String s1, String s2){
+        try {
+            Double a = Double.parseDouble(s1);
+            Double b = Double.parseDouble(s2);
+            return String.valueOf(Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2)));
+        }catch (NumberFormatException e){
+            return "Invalid Number(s)";
+        }
     }
 
 }
