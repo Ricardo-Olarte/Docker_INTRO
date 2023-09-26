@@ -31,15 +31,14 @@ public class SparkWebServer {
 
     private static String buildGET(Request req, String string){
 
-        String fuction = req.pathInfo();
-        string.replace("=","");
-
         if(string.isEmpty()){return "Not Valid Command";}
 
+        String fuction = req.pathInfo();
+        string = string.substring(1, string.length());
 
         //System.out.println("EL REQ ES: " + req);
         //System.out.println("EL FUCTION ES: " + fuction);
-        //System.out.println("EL VAR: " + string);
+        System.out.println("EL VAR: " + string);
 
         switch (fuction){
             case "/sin":
@@ -49,7 +48,7 @@ public class SparkWebServer {
             case "/pal":
                 return pal(string);
             case "/mag":
-                String[] temp = string.split(" ");
+                String[] temp = string.split(",");
                 return mag(temp[0], temp[1]);
         }
 
