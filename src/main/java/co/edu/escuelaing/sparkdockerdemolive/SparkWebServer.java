@@ -38,7 +38,7 @@ public class SparkWebServer {
 
         //System.out.println("EL REQ ES: " + req);
         //System.out.println("EL FUCTION ES: " + fuction);
-        System.out.println("EL VAR: " + string);
+        //System.out.println("EL VAR: " + string);
 
         switch (fuction){
             case "/sin":
