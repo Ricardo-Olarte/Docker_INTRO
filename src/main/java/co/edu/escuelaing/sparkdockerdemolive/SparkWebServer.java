@@ -1,48 +1,56 @@
 package co.edu.escuelaing.sparkdockerdemolive;
 
 import spark.Request;
-import spark.Response;
-
 import static spark.Spark.*;
 
+/**
+ * Use spark
+ * @author RiCHi
+ */
 public class SparkWebServer {
 
+    /**
+     * main, run web server in PORT 4567
+     * @param args
+     */
     public static void main(String... args){
         port(getPort());
         get("hello", (req,res) -> "Hello Docker!");
         get("/sin", (req,res) -> {
-            String string = req.queryString();
+            String string = req.queryParams("value");
             return buildGET(req, string);
         });
         get("/cos", (req,res) -> {
-            String string = req.queryString();
+            String string = req.queryParams("value");
             return buildGET(req, string);
         });
         get("/pal", (req,res) -> {
-            String string = req.queryString();
+            String string = req.queryParams("value");
             return buildGET(req, string);
         });
         get("/mag", (req,res) -> {
-            String string = req.queryString();
+            String string = req.queryParams("value");
             return buildGET(req, string);
         });
 
     }
 
+    /**
+     * Identify  the var in the URL
+     * @param req
+     * @param string
+     * @return String, it's the result about other fuctions
+     */
     private static String buildGET(Request req, String string){
 
         if(string.isEmpty()){return "Not Valid Command";}
 
         String fuction = req.pathInfo();
-        string = string.substring(1, string.length());
-
-        //System.out.println("EL REQ ES: " + req);
-        //System.out.println("EL FUCTION ES: " + fuction);
-        //System.out.println("EL VAR: " + string);
+        string.replace(" ","");
 
         switch (fuction){
             case "/sin":
-                return (string);
+                return sin(string);
             case "/cos":
                 return cos(string);
             case "/pal":
@@ -55,6 +63,9 @@ public class SparkWebServer {
         return "Not Valid Command";
     }
 
+    /**
+     * @return int, it's a port
+     */
     private static int getPort() {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));
@@ -62,6 +73,11 @@ public class SparkWebServer {
         return 4567;
     }
 
+    /**
+     * Sin fuction
+     * @param s
+     * @return int cast to String
+     */
     private static String sin(String s){
         try {
             return String.valueOf(Math.sin(Double.parseDouble(s)));
@@ -70,6 +86,11 @@ public class SparkWebServer {
         }
     }
 
+    /**
+     * Cos fuction
+     * @param s
+     * @return int cast to String
+     */
     private static String cos(String s){
         try{
             return String.valueOf(Math.cos(Double.parseDouble(s)));
@@ -78,6 +99,11 @@ public class SparkWebServer {
         }
     }
 
+    /**
+     * Identify if the string it's palindrome
+     * @param string
+     * @return boolean cast to String
+     */
     private static String pal(String string){
         String c = "";
         for(int i=(string.length()-1);i>=0;--i){
@@ -86,6 +112,12 @@ public class SparkWebServer {
         return String.valueOf(string.equals(c));
     }
 
+    /**
+     * Fuction the distance between two points
+     * @param s1
+     * @param s2
+     * @return int cast to String
+     */
     private static String mag(String s1, String s2){
         try {
             Double a = Double.parseDouble(s1);
